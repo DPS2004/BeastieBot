@@ -1,0 +1,24 @@
+/privatestuff.*
+savedata
+discordia.log
+gateway.json
+deps
+vips
+vips_out
+lit
+luvi
+luvit
+lit.exe
+luvi.exe
+luvit.exe
+
+# random files that you guys probably don't want
+.directory
+.idea/
+.vscode/
+
+# for the linux terminal
+nhrun.sh
+nohup.out
+runmain.sh
+quickstart.zip

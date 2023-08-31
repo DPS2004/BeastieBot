@@ -1,0 +1,9 @@
+[submodule "deps/discordia-components"]
+	path = deps/discordia-components
+	url = https://github.com/Bilal2453/discordia-components.git
+[submodule "deps/discordia-interactions"]
+	path = deps/discordia-interactions
+	url = https://github.com/Bilal2453/discordia-interactions
+[submodule "deps/discordia-slash"]
+	path = deps/discordia-slash
+	url = https://github.com/GitSparTV/discordia-slash
