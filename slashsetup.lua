@@ -21,6 +21,7 @@ if privatestuff.guildid then
 end
 
 _G['slashcommands'] = {}
+_G['messagecommands'] = {}
 
 --[[
 local slashCommand = {}
@@ -67,11 +68,25 @@ local function loadslash(filename, name)
 	slashcommands[name] = rfunc
 end
 
+local function loadmessage(filename, name)
+	name = name or filename
+	local command, rfunc = dofile('messagecommand/'..filename..'.lua')
+	if privatestuff.guildid then
+		client:createGuildApplicationCommand(privatestuff.guildid, command)
+	else
+		client:createGlobalApplicationCommand(command)
+	end
+	messagecommands[name] = rfunc
+end
+
+
 --load the commands
 loadslash('slashtest')
 loadslash('enable')
 loadslash('disable')
 loadslash('webhooktest')
+
+loadmessage('respond')
 
 
 
@@ -88,6 +103,19 @@ client:on('slashCommand', function(interaction, command, args)
 	end
 	slashcommands[command.name](interaction, command, args, user, channel)
 end)
+
+client:on("messageCommand", function(interaction, command, message)
+	local user = interaction.member or interaction.user
+	local channel = interaction.channel
+	if not messagecommands[command.name] then
+		print('tried to run non-existing command '.. command.name)
+		return
+	end
+	messagecommands[command.name](interaction, command, message, user, channel)
+end)
+
+
+
 end
 
 return slashsetup
