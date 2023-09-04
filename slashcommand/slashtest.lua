@@ -18,7 +18,7 @@ command:addOption(option_foobar)
 
 
 --------------On Use---------------
-local function rfunc(interaction, command, args)
+local function rfunc(interaction, command, args, user, channel)
 	interaction:reply('user selected option with ID of '..args.foobar)
 end
 

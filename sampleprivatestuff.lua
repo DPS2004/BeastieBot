@@ -1,8 +1,8 @@
 local privatestuff = {}
 
 privatestuff.botid = 'Bot (lots of numbers and letters here)'
---privatestuff.modroleid = '(string of numbers)'
---privatestuff.cardchannel = '(string of numbers)'
---privatestuff.errorping = '<@YOUR ID>'
+
+--uncomment and fill in below if using a development server for faster updates
+--privatestuff.guildid = ''
 
 return privatestuff

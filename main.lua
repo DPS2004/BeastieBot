@@ -9,8 +9,8 @@ client:useApplicationCommands()
 _G["privatestuff"] = require('privatestuff')
 
 --_G["prefix"] = "c!"
---_G["json"] = require('libs/json')
---_G["fs"] = require('fs')
+_G["json"] = require('libs/json')
+_G["fs"] = require('fs')
 --from https://github.com/DeltaF1/lua-tracery, TODO properly follow the license lmao
 --_G["tracery"] = require('libs/tracery')
 _G["dpf"] = require('libs/dpf')
@@ -59,8 +59,10 @@ print("Stocking shop")
 stockshop()
 ]]--
 
-client:on("ready",function()
 
+
+client:on("ready",function()
+	_G["webhooks"] = dpf.loadjson("savedata/webhooks.json",{})
 	dofile('slashsetup.lua')()
 end)
 

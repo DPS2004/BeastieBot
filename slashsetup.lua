@@ -5,10 +5,19 @@ print('setting up slash commands')
 -- however, after loading once, you don't have to load them everytime your bot loads.
 
 -- gets a list of registered application commands from discord bot
-local oldcommands = client:getGlobalApplicationCommands()
+
 -- deletes any existing application command from the bot's commands list
-for commandId in pairs(oldcommands) do
-	client:deleteGlobalApplicationCommand(commandId)
+local oldglobalcommands = client:getGlobalApplicationCommands()
+for globalcommandId in pairs(oldglobalcommands) do
+	client:deleteGlobalApplicationCommand(globalcommandId)
+end
+
+if privatestuff.guildid then
+	
+	local oldcommands = client:getGuildApplicationCommands(privatestuff.guildid)
+	for commandId in pairs(oldcommands) do
+		client:deleteGuildApplicationCommand(privatestuff.guildid, commandId)
+	end
 end
 
 _G['slashcommands'] = {}
@@ -47,16 +56,37 @@ CLIENT:createGlobalApplicationCommand(messageCommand)
 
 CLIENT:info("Ready!");
 ]]
-local function loadslash(name)
-	local command, rfunc = dofile('slashcommand/'..name..'.lua')
-	client:createGlobalApplicationCommand(command)
+local function loadslash(filename, name)
+	name = name or filename
+	local command, rfunc = dofile('slashcommand/'..filename..'.lua')
+	if privatestuff.guildid then
+		client:createGuildApplicationCommand(privatestuff.guildid, command)
+	else
+		client:createGlobalApplicationCommand(command)
+	end
 	slashcommands[name] = rfunc
 end
 
+--load the commands
 loadslash('slashtest')
+loadslash('enable')
+loadslash('disable')
+loadslash('webhooktest')
+
+
+
+--end loading
 
 client:on('slashCommand', function(interaction, command, args)
-	slashcommands[command.name](interaction, command, args)
+	local user = interaction.member or interaction.user
+	
+	
+	local channel = interaction.channel
+	if not slashcommands[command.name] then
+		print('tried to run non-existing command '.. command.name)
+		return
+	end
+	slashcommands[command.name](interaction, command, args, user, channel)
 end)
 end
 

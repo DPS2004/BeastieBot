@@ -6,6 +6,10 @@ function dpf.loadjson(f,w)
   local cf = io.open(f, "r+")
   if cf == nil then
     cf = io.open(f, "w")
+	local wj = json.encode(w)
+	if wj == '' then
+		wj = '{}'
+	end
     cf:write(json.encode(w))
     cf:close()
     cf = io.open(f, "r+")
