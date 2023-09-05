@@ -25,15 +25,21 @@ discordia.extensions()
 
 _G['beastiedata'] = dpf.loadjson('beasties/data.json')
 
-
-_G['sendbeasties'] = function(id,token,text,allthree)
-	if allthree == nil then
-		allthree = true
-	end
+_G['getword'] = function(text)
 	text = text:gsub("%p"," ")
 	local textresult = ''
 	for textmatch in text:gmatch("%S+") do textresult = textmatch end
 	textresult = '**'..string.upper(textresult)..'**'
+	return textresult
+end
+
+_G['sendbeasties'] = function(id,token,text,allthree)
+	
+	textresult = getword(text)
+	if allthree == nil then
+		allthree = true
+	end
+	
 	
 	local function onebeastie(num)
 		client._api:executeWebhook(id, token, {
@@ -54,7 +60,6 @@ _G['sendbeasties'] = function(id,token,text,allthree)
 end
 
 _G['defaultsettings'] = {
-	randomchance = 0,
 	allthree = true,
 	randomchannels = {}
 }
@@ -91,6 +96,35 @@ client:on("ready",function()
 	_G["webhooks"] = dpf.loadjson("savedata/webhooks.json",{})
 	dofile('slashsetup.lua')()
 end)
+
+client:on('messageCreate', function(message)
+	if message.webhookId or message.author.bot then
+		return
+	end
+	if not message.guild then
+		message:reply(getword(message.content)) --dms
+		return
+	end
+	
+	
+	local randomchannels = getsetting(message.guild.id,'randomchannels')
+	local chance = randomchannels[message.channel.id] or 0
+	if chance == 0 then
+		return
+	end
+	if chance >= math.random() then
+		webhooks[message.channel.guild.id] = webhooks[message.channel.guild.id] or {}
+		if not webhooks[message.channel.guild.id][message.channel.id] then
+			return
+		end
+		
+		local id = webhooks[message.channel.guild.id][message.channel.id][1]
+		local token = webhooks[message.channel.guild.id][message.channel.id][2]
+		
+		sendbeasties(id,token,message.content)
+	end
+end)
+
 
 
 client:run(privatestuff.botid)

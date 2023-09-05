@@ -81,10 +81,12 @@ end
 
 
 --load the commands
-loadslash('slashtest')
+--loadslash('slashtest')
 loadslash('enable')
 loadslash('disable')
 loadslash('webhooktest')
+loadslash('enablerandom')
+loadslash('disablerandom')
 
 loadmessage('respond')
 
@@ -97,6 +99,7 @@ client:on('slashCommand', function(interaction, command, args)
 	
 	
 	local channel = interaction.channel
+	args = args or {}
 	if not slashcommands[command.name] then
 		print('tried to run non-existing command '.. command.name)
 		return
