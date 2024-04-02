@@ -114,6 +114,10 @@ client:on("messageCommand", function(interaction, command, message)
 		print('tried to run non-existing command '.. command.name)
 		return
 	end
+	if not message then
+		print('could not access message')
+		return
+	end
 	messagecommands[command.name](interaction, command, message, user, channel)
 end)
 
